@@ -3,26 +3,45 @@
 @implementation TwoDimensionalArraySorter
 
 - (NSArray *)twoDimensionalSort:(NSArray<NSArray *> *)array {
-    if (array == nil){return @[];}
+
+    NSMutableArray *numbers = [NSMutableArray new];
+    NSMutableArray *strings = [NSMutableArray new];
     
-    for (NSArray *subArray in array){
-        if (![subArray isKindOfClass:[NSArray class]]) return @[];
-    }
-    
-    NSMutableArray *newArray = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < [array count]; i++) {
-        for (int j = 0; j < [array[i] count]; j++) {
-            [newArray addObject: array[i][j]];
+    for (int i=0; i<array.count; i++) {
+        // Check array[i] is Array
+        if (![array[i] isKindOfClass:[NSArray class]]) { return @[]; }
+        for (NSObject *items in array[i]) {
+            if ([items isKindOfClass:[NSString class]]) {
+                [strings addObject:items];
+            } else if ([items isKindOfClass:[NSNumber class]]) {
+                [numbers addObject:items];
+            }
         }
     }
     
-    NSSortDescriptor *sortDescriptor;
-    sortDescriptor = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    NSArray *sortedArray = [newArray sortedArrayUsingDescriptors:sortDescriptors];
+    // Sort Arrays
+    NSSortDescriptor *sortAscending = [[NSSortDescriptor alloc] initWithKey:nil ascending:YES];
+    NSArray *arrayAscending = [NSArray arrayWithObject:sortAscending];
+    NSSortDescriptor *sortDescending = [[NSSortDescriptor alloc] initWithKey:nil ascending:NO];
+    NSArray *arrayDescending = [NSArray arrayWithObject:sortDescending];
     
-    return sortedArray;
+    
+    // Create result
+    NSMutableArray *result = [NSMutableArray new];
+    if (numbers.count > 0 && strings.count > 0) {
+        NSArray *sortedNumbers = [numbers sortedArrayUsingDescriptors:arrayAscending];
+        NSArray *sortedStrings = [strings sortedArrayUsingDescriptors:arrayDescending];
+        result = @[sortedNumbers, sortedStrings].mutableCopy;
+    } else if (numbers.count > 0) {
+        NSArray *sortedNumbers = [numbers sortedArrayUsingDescriptors:arrayAscending];
+        result = sortedNumbers.mutableCopy;
+    } else if (strings.count > 0) {
+        NSArray *sortedStrings = [strings sortedArrayUsingDescriptors:arrayAscending];
+        result = sortedStrings.mutableCopy;
+    }
+    
+    return result;
+
 }
 
 @end

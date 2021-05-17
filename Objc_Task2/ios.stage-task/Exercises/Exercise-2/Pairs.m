@@ -4,17 +4,16 @@
 
 - (NSInteger)countPairs:(NSArray <NSNumber *> *)array number:(NSNumber *)number {
     
-    NSInteger counter = 0;
-    NSUInteger n = [array indexOfObjectIdenticalTo:array.lastObject];
-    
-        while (n > 0){
-            for (int i = 0; i < array.count ; i++) {
-                if ([[array objectAtIndex:n] intValue] - [[array objectAtIndex:i] intValue] == [number intValue]) {counter++;}
+    NSInteger difference = number.integerValue;
+        NSInteger count = 0;
+        for (int i = 0; i < array.count - 1; i++) {
+            for (int j = i + 1; j < array.count; j++) {
+                if (labs(array[j].integerValue - array[i].integerValue) == difference) {
+                    count++;
+                }
             }
-            n--;
         }
-    
-    return counter;
+        return count;
 }
 
 @end
